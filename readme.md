@@ -26,7 +26,7 @@ A high-performance search engine implementation using TF-IDF (Term Frequency-Inv
 
 1. Clone the repository:
    ```bash
-   git clone [repository-url]
+   git clone https://github.com/LucasMartin96/SearchEngineTFIDF
    cd SearchEngine
    ```
 
