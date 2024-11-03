@@ -33,4 +33,17 @@ public class DocumentRepository : BaseRepository<Document>, IDocumentRepository
         
         return titleResults.Union(termResults).ToList();
     }
+
+    public async Task<(List<Document> Documents, int TotalCount)> GetPagedAsync(int pageNumber, int pageSize)
+    {
+        int totalCount = await Entities.CountAsync();
+        
+        var documents = await Entities
+            .OrderByDescending(d => d.CreatedAt)
+            .Skip((pageNumber - 1) * pageSize)
+            .Take(pageSize)
+            .ToListAsync();
+
+        return (documents, totalCount);
+    }
 }

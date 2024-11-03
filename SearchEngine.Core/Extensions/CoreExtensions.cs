@@ -11,6 +11,7 @@ public static class CoreExtensions
     {
         services.AddScoped<ISearchService, SearchService>();
         services.AddScoped<IIndexerService, IndexerService>();
+        services.AddScoped<IDocumentService, DocumentService>();
 
         return services;
     }
