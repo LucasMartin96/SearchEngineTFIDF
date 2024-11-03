@@ -6,7 +6,6 @@ using SearchEngine.Shared.DTOs.Base;
 using Microsoft.Extensions.Logging;
 using SearchEngine.Core.Exceptions;
 using SearchEngine.Core.Records;
-using SearchEngine.Shared.DTOs;
 using SearchEngine.Shared.DTOs.Responses;
 
 namespace SearchEngine.Core.Services;

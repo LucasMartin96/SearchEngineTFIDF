@@ -1,4 +1,6 @@
-﻿namespace SearchEngine.Persistence.Repositories;
+﻿using SearchEngine.Core.Records;
+
+namespace SearchEngine.Persistence.Repositories;
 
 using Microsoft.EntityFrameworkCore;
 using Core.Entities;
@@ -45,5 +47,22 @@ public class DocumentRepository : BaseRepository<Document>, IDocumentRepository
             .ToListAsync();
 
         return (documents, totalCount);
+    }
+
+    public async Task<Statistics> GetDocumentStatisticsAsync()
+    {
+        var stats = await Entities
+            .GroupBy(x => 1)
+            .Select(g => new
+            {
+                TotalDocs = g.Count(),
+                TotalWords = g.Sum(d => (long)d.WordCount),
+                LastIndexed = g.Max(d => d.CreatedAt)
+            })
+            .FirstOrDefaultAsync();
+
+        return stats == null 
+            ? new Statistics(0, 0, null) 
+            : new Statistics(stats.TotalDocs, stats.TotalWords, stats.LastIndexed);
     }
 }

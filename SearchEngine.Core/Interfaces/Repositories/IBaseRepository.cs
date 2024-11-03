@@ -10,4 +10,5 @@ public interface IBaseRepository<T> where T : BaseEntity
     Task UpdateAsync(T entity);
     Task DeleteAsync(Guid id);
     Task SaveChangesAsync();
+    Task<int> GetTotalCountAsync();
 }

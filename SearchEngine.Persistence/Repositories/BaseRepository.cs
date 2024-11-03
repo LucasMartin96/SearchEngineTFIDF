@@ -50,4 +50,9 @@ public class BaseRepository<T> : IBaseRepository<T> where T : BaseEntity
     {
         await Context.SaveChangesAsync();
     }
+
+    public virtual async Task<int> GetTotalCountAsync()
+    {
+        return await Entities.CountAsync();
+    }
 }

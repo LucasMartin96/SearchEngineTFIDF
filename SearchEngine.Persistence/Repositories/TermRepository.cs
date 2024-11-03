@@ -46,4 +46,12 @@ public class TermRepository : BaseRepository<Term>, ITermRepository
                 : 0
         );
     }
+
+    public override async Task<int> GetTotalCountAsync()
+    {
+        using SearchEngineContext context = _contextFactory.CreateDbContext();
+        return await context.Set<Term>()
+            .AsNoTracking()
+            .CountAsync();
+    }
 }

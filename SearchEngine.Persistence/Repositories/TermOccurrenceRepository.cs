@@ -15,7 +15,6 @@ public class TermOccurrenceRepository : BaseRepository<TermOccurrence>, ITermOcc
         _contextFactory = contextFactory;
     }
     
-    // TODO: Just bring it without tracking 
     public async Task<Dictionary<(Guid TermId, Guid DocumentId), double>> GetTermFrequenciesAsync(
         List<Guid> termIds, 
         Guid documentId)
@@ -29,5 +28,13 @@ public class TermOccurrenceRepository : BaseRepository<TermOccurrence>, ITermOcc
             x => (x.TermId, x.DocumentId),
             x => x.Frequency
         );
+    }
+
+    public override async Task<int> GetTotalCountAsync()
+    {
+        using SearchEngineContext context = _contextFactory.CreateDbContext();
+        return await context.Set<TermOccurrence>()
+            .AsNoTracking()
+            .SumAsync(to => to.Frequency);
     }
 }
