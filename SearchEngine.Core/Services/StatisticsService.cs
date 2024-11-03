@@ -35,9 +35,7 @@ public class StatisticsService : IStatisticsService
             {
                 TotalDocuments = statistics.TotalDocs,
                 TotalUniqueTerms = await _termRepository.GetTotalCountAsync(),
-                TotalTermOccurrences = await _termOccurrenceRepository.GetTotalCountAsync(),
-                TotalWordCount = statistics.TotalWords,
-                LastIndexedAt = statistics.LastIndexed
+                TotalWordCount = statistics.TotalWords
             };
         }, CacheDuration) ?? new StatisticsResponse();
     }

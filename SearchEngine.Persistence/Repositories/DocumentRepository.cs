@@ -56,13 +56,12 @@ public class DocumentRepository : BaseRepository<Document>, IDocumentRepository
             .Select(g => new
             {
                 TotalDocs = g.Count(),
-                TotalWords = g.Sum(d => (long)d.WordCount),
-                LastIndexed = g.Max(d => d.CreatedAt)
+                TotalWords = g.Sum(d => (long)d.WordCount)
             })
             .FirstOrDefaultAsync();
 
         return stats == null 
-            ? new Statistics(0, 0, null) 
-            : new Statistics(stats.TotalDocs, stats.TotalWords, stats.LastIndexed);
+            ? new Statistics(0, 0) 
+            : new Statistics(stats.TotalDocs, stats.TotalWords);
     }
 }
