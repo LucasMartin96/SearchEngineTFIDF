@@ -15,6 +15,7 @@ public class StopWordRepository : BaseRepository<StopWord>, IStopWordRepository
     public async Task<Dictionary<string, HashSet<string>>> GetAllStopWordsByLanguageAsync()
     {
         return await Entities
+            .AsNoTracking()
             .GroupBy(sw => sw.Language)
             .ToDictionaryAsync(
                 g => g.Key,

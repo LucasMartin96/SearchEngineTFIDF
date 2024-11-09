@@ -21,10 +21,12 @@ public class DocumentRepository : BaseRepository<Document>, IDocumentRepository
         string normalizedQuery = query.ToLower();
         
         List<Document> titleResults = await Entities
+            .AsNoTracking()
             .Where(x => x.Title.ToLower().Contains(normalizedQuery))
             .ToListAsync();
         
         List<Document> termResults = await Entities
+            .AsNoTracking()
             .Where(d => d.TermOccurrences
                 .Join(Context.Terms.Where(t => queryTerms.Contains(t.Word.ToLower())),
                     to => to.TermId,
@@ -41,6 +43,7 @@ public class DocumentRepository : BaseRepository<Document>, IDocumentRepository
         int totalCount = await Entities.CountAsync();
         
         var documents = await Entities
+            .AsNoTracking()
             .OrderByDescending(d => d.CreatedAt)
             .Skip((pageNumber - 1) * pageSize)
             .Take(pageSize)
@@ -52,6 +55,7 @@ public class DocumentRepository : BaseRepository<Document>, IDocumentRepository
     public async Task<Statistics> GetDocumentStatisticsAsync()
     {
         var stats = await Entities
+            .AsNoTracking()
             .GroupBy(x => 1)
             .Select(g => new
             {

@@ -19,6 +19,7 @@ public class TermRepository : BaseRepository<Term>, ITermRepository
     public async Task<Term?> GetByWordAsync(string word)
     {
         return await Entities
+            .AsNoTracking()
             .FirstOrDefaultAsync(x => x.Word == word);
     }
 
