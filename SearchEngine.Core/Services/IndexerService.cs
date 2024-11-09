@@ -10,7 +10,6 @@ using System.Text.RegularExpressions;
 namespace SearchEngine.Core.Services;
 
 // TODO: Implement batch upload
-// TODO: Use a cache for the stopwords 
 // TODO: Weight in common terms is good here
 public partial class IndexerService : IIndexerService
 {
@@ -22,6 +21,9 @@ public partial class IndexerService : IIndexerService
     private IDictionary<string, HashSet<string>> _vocabulary;
     private readonly ILogger<IndexerService> _logger;
     private readonly ISearchService _searchService;
+    private readonly ICacheService _cacheService;
+    private const string StopWordsCacheKey = "STOPWORDS_BY_LANGUAGE";
+    private static readonly TimeSpan CacheDuration = TimeSpan.FromHours(24);
     
     private static readonly Regex WordSplitRegex = MyWordSplitRegex(); 
     private static readonly Regex NonAlphanumericRegex = MyNonAlphanumericRegex();
@@ -33,6 +35,7 @@ public partial class IndexerService : IIndexerService
         IStopWordRepository stopWordRepository,
         ILanguageDetectionService languageDetectionService,
         ISearchService searchService,
+        ICacheService cacheService,
         ILogger<IndexerService> logger)
     {
         _documentRepository = documentRepository;
@@ -41,13 +44,17 @@ public partial class IndexerService : IIndexerService
         _stopWordRepository = stopWordRepository;
         _languageDetectionService = languageDetectionService;
         _searchService = searchService;
+        _cacheService = cacheService;
         _logger = logger;
         LoadStopWords().Wait();
     }
 
     private async Task LoadStopWords()
     {
-        _vocabulary = await _stopWordRepository.GetAllStopWordsByLanguageAsync();
+        _vocabulary = await _cacheService.GetOrCreateAsync(
+            StopWordsCacheKey,
+            async () => await _stopWordRepository.GetAllStopWordsByLanguageAsync(),
+            CacheDuration) ?? new Dictionary<string, HashSet<string>>();
     }
 
     public async Task<Document> IndexDocumentAsync(string title, string path, string content)
