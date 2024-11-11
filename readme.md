@@ -1,6 +1,10 @@
 ﻿# 🚀 Search Engine Project
 A high-performance search engine implementation using TF-IDF (Term Frequency-Inverse Document Frequency) scoring, built with .NET 8.
 
+## Project Deployment
+
+The project is live! You can view it here: [https://searchenginefronttfidf.onrender.com/](https://searchenginefronttfidf.onrender.com/)
+
 ## 🛠️ Technologies Used
 - .NET 8
 - PostgreSQL
